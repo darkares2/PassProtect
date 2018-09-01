@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Controller
@@ -33,6 +34,14 @@ public class PasswordController {
     private User getAuthenticationUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userService.getUserByName(auth.getName());
+    }
+
+    @Transactional
+    @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
+    public ResponseEntity deleteById(@PathVariable("id") long id) {
+        User user = getAuthenticationUser();
+        passwordService.deleteByUserIdAndId(user.getId(), id);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
 

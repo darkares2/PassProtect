@@ -2,6 +2,7 @@ import {App} from "../app";
 
 const React = require('react');
 import {PasswordForm} from "../forms/passwordform";
+import {PasswordList} from "../lists/passwordlist";
 
 export class Passwords extends React.Component {
 
@@ -26,6 +27,7 @@ export class Passwords extends React.Component {
             <div>
                 <PasswordForm display={this.state.displayAddForm} onSaved={this.handlePasswordSaved}/>
                 <button className="btn btn-success" onClick={this.handleAddPassword}>Create new password</button>
+                <PasswordList refresh={this.state.refreshPasswords}/>
             </div>
         )
     }

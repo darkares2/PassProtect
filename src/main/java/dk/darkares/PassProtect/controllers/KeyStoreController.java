@@ -46,7 +46,7 @@ public class KeyStoreController {
 
     @Transactional
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
-    public ResponseEntity getById(@PathVariable("id") long id) {
+    public ResponseEntity deleteById(@PathVariable("id") long id) {
         User user = getAuthenticationUser();
         keyService.deleteByUserIdAndId(user.getId(), id);
         return new ResponseEntity<>(null, HttpStatus.OK);

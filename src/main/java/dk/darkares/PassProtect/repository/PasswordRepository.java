@@ -14,4 +14,5 @@ public interface PasswordRepository extends JpaRepository<Password, Long> {
     List<Password> findAllByUserId(long userId);
     Password findByIdAndUserId(long id, long userId);
     void deleteByUserId(Long userId);
+    void deleteByUserIdAndId(Long userId, Long id);
 }

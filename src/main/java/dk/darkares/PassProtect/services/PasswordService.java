@@ -46,4 +46,8 @@ public class PasswordService {
     public void deleteByUserId(long userId) {
         passwordRepository.deleteByUserId(userId);
     }
+
+    public void deleteByUserIdAndId(long userId, long id) {
+        passwordRepository.deleteByUserIdAndId(userId, id);
+    }
 }

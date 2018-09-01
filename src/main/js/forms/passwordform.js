@@ -39,10 +39,10 @@ export class PasswordForm extends React.Component{
     render() {
         if (this.props.display) {
             return (
-                <form>
-                    <Input ref="name" id="name" type="text" label="Name" placeholder="Password name" help="Please enter the identifier of the password" value=""/>
-                    <Input ref="description" id="description" type="text" label="Description" placeholder="Description" help="Please enter the description password" value=""/>
-                    <Input ref="password" id="password" type="password" label="Password" placeholder="Password" help="Please enter password" value=""/>
+                <form autocomplete="off">
+                    <Input ref="name" id="name" autocomplete="false" type="text" label="Name" placeholder="Password name" help="Please enter the identifier of the password" value=""/>
+                    <Input ref="password" id="passwordValue" type="password" label="Password" autocomplete="new-password" placeholder="Password" help="Please enter password" value=""/>
+                    <Input ref="description" id="descriptionValue" type="text" label="Description" placeholder="Description" help="Please enter the description" value=""/>
                     <Input ref="keyId" id="keyid" type="text" label="Key" placeholder="Key" help="Please enter key id" value=""/>
                     <button className="btn btn-success" onClick={this.handleSubmit}>Save</button>
                 </form>
