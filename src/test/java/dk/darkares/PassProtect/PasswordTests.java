@@ -2,6 +2,7 @@ package dk.darkares.PassProtect;
 
 
 import dk.darkares.PassProtect.controllers.HomeController;
+import dk.darkares.PassProtect.models.KeyStore;
 import dk.darkares.PassProtect.models.Password;
 import dk.darkares.PassProtect.models.User;
 import dk.darkares.PassProtect.services.KeyService;
@@ -143,9 +144,15 @@ public class PasswordTests {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
         User user = login("test", "test", headers);
+        KeyStore key = new KeyStore();
+        key.setName("Test");
+        key.setkeyContent(keyService.generateKey());
+        key.setUserId(user.getId());
+        key = keyService.createKey(key);
+
         Password password = new Password();
         password.setName("Fun");
-        password.setKeyId(1);
+        password.setKeyId(key.getId());
         password.setPassword("secret");
         password.setDescription("Desc");
         HttpEntity<Password> requestEntity = new HttpEntity<>(password, headers);
