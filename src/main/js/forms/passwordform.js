@@ -1,13 +1,64 @@
+import {Password} from "../entities/password";
+
 const React = require('react');
 const axios = require('axios');
 import {Input} from '../formfields/input'
+import {Select} from '../formfields/select'
 import {App} from '../app'
 
 export class PasswordForm extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {passwords: [], displayAddForm: false};
+        this.state = {keys: []};
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        this.loadKeys();
+        this.generatePassword();
+    }
+
+    componentDidUpdate(prevProps) {
+        // Typical usage (don't forget to compare props):
+        if (this.props.display !== prevProps.display) {
+            this.generatePassword();
+        }
+    }
+
+    loadKeys() {
+        const self = this;
+        axios.get('/api/v1/key/all', {
+            headers: {
+                'accept': 'application/json',
+                //    'content-type': 'application/x-www-form-urlencoded'
+            }
+        })
+            .then(function (response) {
+                console.log(response);
+                self.setState({keys: response.data});
+            })
+            .catch(function (error) {
+                console.log(error);
+                App.handleErrorResponse(error, "Failed to load keys")
+            });
+    }
+
+    generatePassword() {
+        const self = this;
+        axios.get('/api/v1/password/generate', {
+            headers: {
+                'accept': 'application/json',
+                //    'content-type': 'application/x-www-form-urlencoded'
+            }
+        })
+            .then(function (response) {
+                console.log(response);
+                self.setState({password: response.data});
+            })
+            .catch(function (error) {
+                console.log(error);
+                App.handleErrorResponse(error, "Failed to load keys")
+            });
     }
 
     handleSubmit(event) {
@@ -38,12 +89,17 @@ export class PasswordForm extends React.Component{
 
     render() {
         if (this.props.display) {
+            let keys = [];
+            this.state.keys.map(key =>
+                keys.push({value: key.id, text: key.name})
+            );
+
             return (
-                <form autocomplete="off">
+                <form autoComplete="off">
                     <Input ref="name" id="name" autocomplete="false" type="text" label="Name" placeholder="Password name" help="Please enter the identifier of the password" value=""/>
-                    <Input ref="password" id="passwordValue" type="password" label="Password" autocomplete="new-password" placeholder="Password" help="Please enter password" value=""/>
+                    <Input ref="password" id="passwordValue" type="text" label="Password" autocomplete="new-password" placeholder="Password" help="Please enter password" value={this.state.password}/>
                     <Input ref="description" id="descriptionValue" type="text" label="Description" placeholder="Description" help="Please enter the description" value=""/>
-                    <Input ref="keyId" id="keyid" type="text" label="Key" placeholder="Key" help="Please enter key id" value=""/>
+                    <Select ref="keyId" id="keyid" type="text" label="Key" placeholder="Key" help="Please select key" options={keys} value=""/>
                     <button className="btn btn-success" onClick={this.handleSubmit}>Save</button>
                 </form>
             )

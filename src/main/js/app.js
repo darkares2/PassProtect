@@ -15,6 +15,17 @@ export class App extends React.Component {
         notif = this.refs.notificationSystem;
     }
 
+    static showMessageWithButton(level, message, label, callback) {
+        notif.addNotification({
+            message: message,
+            level: level,
+            action: {
+                label: label,
+                callback: callback
+            }
+        });
+    }
+
     static showMessage(level, message, extra) {
         notif.addNotification({
             message: message,
@@ -29,10 +40,12 @@ export class App extends React.Component {
 
     static handleErrorResponse(response, error) {
         let message = "";
-        if (response.error !== undefined)
+        if (response.response !== undefined && response.response.data !== undefined && response.response.data.message !== undefined)
+            message = response.response.data.message;
+        else if (response.error !== undefined)
             message = response.error;
         else if (response.message !== undefined)
-            message = message;
+            message = response.message;
         else
             message = response;
 

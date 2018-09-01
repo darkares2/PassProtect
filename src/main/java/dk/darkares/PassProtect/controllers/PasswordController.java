@@ -1,7 +1,10 @@
 package dk.darkares.PassProtect.controllers;
 
+import dk.darkares.PassProtect.misc.PasswordGenerator;
+import dk.darkares.PassProtect.models.KeyStore;
 import dk.darkares.PassProtect.models.Password;
 import dk.darkares.PassProtect.models.User;
+import dk.darkares.PassProtect.services.KeyService;
 import dk.darkares.PassProtect.services.PasswordService;
 import dk.darkares.PassProtect.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ public class PasswordController {
     private PasswordService passwordService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private KeyService keyService;
 
 
     @RequestMapping(value = "/all", method = {RequestMethod.GET})
@@ -36,6 +41,27 @@ public class PasswordController {
         return userService.getUserByName(auth.getName());
     }
 
+    @RequestMapping(value = "/generate", method = {RequestMethod.GET})
+    public ResponseEntity<String> generate() {
+        PasswordGenerator passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()
+                .useDigits(true)
+                .useLower(true)
+                .useUpper(true)
+                .build();
+        String password = passwordGenerator.generate(16);
+        return new ResponseEntity<>(password, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/decrypt/{id}", method = {RequestMethod.GET})
+    public ResponseEntity<String> decryptById(@PathVariable("id") long id) {
+        String decryptedPassword = null;
+        User user = getAuthenticationUser();
+        Password password = passwordService.getPasswordById(id);
+        KeyStore key = keyService.getKeyById(password.getKeyId());
+        decryptedPassword = passwordService.decryptPassword(key.getkeyContent(), password.getPassword());
+        return new ResponseEntity<>(decryptedPassword, HttpStatus.OK);
+    }
+
     @Transactional
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     public ResponseEntity deleteById(@PathVariable("id") long id) {
@@ -46,9 +72,13 @@ public class PasswordController {
 
 
     @RequestMapping(value = "/", method = {RequestMethod.POST}, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Password> createPassword(@RequestBody Password password) {
+    public ResponseEntity<Password> createPassword(@RequestBody Password password) throws Exception {
         User user = getAuthenticationUser();
         password.setUserId(user.getId());
+        KeyStore key = keyService.getKeyById(password.getKeyId());
+        if (key == null)
+            throw new Exception("Key not found");
+        password.setPassword(passwordService.encryptPassword(key.getkeyContent(), password.getPassword()));
         password = passwordService.createPassword(password);
         return new ResponseEntity<>(password, HttpStatus.OK);
     }
