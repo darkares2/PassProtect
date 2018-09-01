@@ -1,0 +1,21 @@
+@import "../../../../node_modules/bootstrap/scss/bootstrap";
+
+header {
+  background-color: slategrey;
+}
+
+.navbar-brand {
+  color: cyan;
+}
+
+.nav-link {
+  color: snow;
+}
+
+.nav-link.active {
+  text-decoration: underline;
+}
+
+.nav-link:hover {
+  color: mediumaquamarine;
+}

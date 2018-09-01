@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title>PassProtect</title>
+</head>
+<body>
+
+<div id="react"></div>
+
+
+<script th:inline="javascript">
+    var allCookies = [[${allCookies}]];
+</script>
+<script src="/built/css.js"></script>
+<script src="/built/app.js"></script>
+
+</body>
+</html>
