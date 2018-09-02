@@ -123,7 +123,7 @@ public class HomeController {
         return new ResponseEntity<>(new LoginResponse(403, "Authentication failed", message), HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/{path:^(?!api|built|login|loginTest).*}/**"})
+    @RequestMapping(value = {"/{path:^(?!api|built|images|login|loginTest).*}/**"})
     public String redirect() {
         // Forward to home page so that route is preserved.
         return "forward:/";

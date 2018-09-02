@@ -56,6 +56,7 @@ public class PasswordController {
                 .useDigits(true)
                 .useLower(true)
                 .useUpper(true)
+                .usePunctuation(true)
                 .build();
         return passwordGenerator.generate(16);
     }
