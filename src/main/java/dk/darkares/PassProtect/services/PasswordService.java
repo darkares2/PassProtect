@@ -31,6 +31,10 @@ public class PasswordService {
         return passwordRepository.findById(id).get();
     }
 
+    public Password getPasswordByUserIdAndId(long userId, long id) {
+        return passwordRepository.findByIdAndUserId(id, userId);
+    }
+
     public List<Password> getAll() {
         return passwordRepository.findAll();
     }
@@ -49,5 +53,12 @@ public class PasswordService {
 
     public void deleteByUserIdAndId(long userId, long id) {
         passwordRepository.deleteByUserIdAndId(userId, id);
+    }
+
+    public boolean checkKeyUsage(long userId, long id) {
+        List<Password> list = passwordRepository.findAllByUserIdAndKeyId(userId, id);
+        if (list.size() > 0)
+            return true;
+        return false;
     }
 }

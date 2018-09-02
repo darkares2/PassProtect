@@ -60,13 +60,11 @@ export class Login extends React.Component {
     render() {
         return (
             <div>
-                <form className="form">
-                    <div>
-                        <input id="username" name="username" onChange = {this.handleChange} />
-                        <br/>
-                        <input id="password" name="password" type="password" onChange = {this.handleChange} />
-                        <br/>
-                        <button className="btn btn-xs btn-success" type="submit" onClick={this.handleSubmit}/>
+                <form className="form-inline">
+                    <div className="form-group">
+                        <input className="form-control" id="username" name="username" onChange = {this.handleChange} />
+                        <input className="form-control" id="password" name="password" type="password" onChange = {this.handleChange} />
+                        <button className="btn btn-xs btn-success" type="submit" onClick={this.handleSubmit}>Login</button>
                     </div>
                 </form>
             </div>

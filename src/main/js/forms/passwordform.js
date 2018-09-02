@@ -93,13 +93,14 @@ export class PasswordForm extends React.Component{
             this.state.keys.map(key =>
                 keys.push({value: key.id, text: key.name})
             );
+            let formType = "row";
 
             return (
                 <form autoComplete="off">
-                    <Input ref="name" id="name" autocomplete="false" type="text" label="Name" placeholder="Password name" help="Please enter the identifier of the password" value=""/>
-                    <Input ref="password" id="passwordValue" type="text" label="Password" autocomplete="new-password" placeholder="Password" help="Please enter password" value={this.state.password}/>
-                    <Input ref="description" id="descriptionValue" type="text" label="Description" placeholder="Description" help="Please enter the description" value=""/>
-                    <Select ref="keyId" id="keyid" type="text" label="Key" placeholder="Key" help="Please select key" options={keys} value=""/>
+                    <Input formType={formType} ref="name" id="name" autocomplete="false" type="text" label="Name" placeholder="Password name" help="Please enter the identifier of the password" value=""/>
+                    <Input formType={formType} ref="password" id="passwordValue" type="text" label="Password" autocomplete="new-password" placeholder="Password" help="Please enter password" value={this.state.password}/>
+                    <Input formType={formType} ref="description" id="descriptionValue" type="text" label="Description" placeholder="Description" help="Please enter the description" value=""/>
+                    <Select formType={formType} ref="keyId" id="keyid" type="text" label="Key" placeholder="Key" help="Please select key" options={keys} value=""/>
                     <button className="btn btn-success" onClick={this.handleSubmit}>Save</button>
                 </form>
             )

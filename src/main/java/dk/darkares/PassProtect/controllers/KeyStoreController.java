@@ -3,7 +3,9 @@ package dk.darkares.PassProtect.controllers;
 import dk.darkares.PassProtect.models.KeyStore;
 import dk.darkares.PassProtect.models.Password;
 import dk.darkares.PassProtect.models.User;
+import dk.darkares.PassProtect.services.EventLogService;
 import dk.darkares.PassProtect.services.KeyService;
+import dk.darkares.PassProtect.services.PasswordService;
 import dk.darkares.PassProtect.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +28,11 @@ public class KeyStoreController {
     @Autowired
     private KeyService keyService;
     @Autowired
+    private PasswordService passwordService;
+    @Autowired
     private UserService userService;
+    @Autowired
+    private EventLogService eventLogService;
 
 
     @RequestMapping(value = "/all", method = {RequestMethod.GET})
@@ -38,6 +44,7 @@ public class KeyStoreController {
     @RequestMapping(value = "/", method = {RequestMethod.POST}, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<KeyStore> createKey(@RequestBody KeyStore keyStore) {
         User user = getAuthenticationUser();
+        eventLogService.createEvent("CreateKey", "By user " + user.getName());
         keyStore.setUserId(user.getId());
         keyStore.setkeyContent(keyService.generateKey());
         keyStore = keyService.createKey(keyStore);
@@ -46,8 +53,11 @@ public class KeyStoreController {
 
     @Transactional
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
-    public ResponseEntity deleteById(@PathVariable("id") long id) {
+    public ResponseEntity deleteById(@PathVariable("id") long id) throws Exception {
         User user = getAuthenticationUser();
+        eventLogService.createEvent("DeleteKey", "Item " + id  + " By user " + user.getName());
+        if (passwordService.checkKeyUsage(user.getId(), id))
+            throw new Exception("Key is in use");
         keyService.deleteByUserIdAndId(user.getId(), id);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }

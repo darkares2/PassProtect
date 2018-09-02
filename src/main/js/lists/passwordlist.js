@@ -6,7 +6,8 @@ import {Password} from '../entities/password';
 export class PasswordList extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {passwords: []};
+        this.state = {passwords: [], filter: ""};
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
@@ -38,17 +39,31 @@ export class PasswordList extends React.Component{
         }
     }
 
+    handleChange (event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        this.setState({[name]: value});
+    }
+
     render() {
-        const passwords = this.state.passwords.map(password =>
-            <Password key={password.id} item={password}/>
-        );
+        const passwords = this.state.passwords.map(password => {
+            return (password.name.toLowerCase().includes(this.state.filter.toLowerCase()) || password.description.toLowerCase().includes(this.state.filter.toLowerCase())) ?
+                <Password key={password.id} item={password} safeMode={this.props.safeMode}/>
+                : null
+        });
         return (
+            <div>
+                <div className="form-group input-group-sm col-2 offset-4">
+                <input type="text" className="form-control" id="filter" name="filter" placeholder="Filter..." value={this.state.filter} onChange = {this.handleChange}/>
+                </div>
             <table className="table table-bordered table-striped">
-                {Password.header()}
+                {Password.header(this.props.safeMode)}
                 <tbody>
                 {passwords}
                 </tbody>
             </table>
+            </div>
         )
     }
 }

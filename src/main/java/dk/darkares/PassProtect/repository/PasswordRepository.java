@@ -13,6 +13,7 @@ import java.util.List;
 public interface PasswordRepository extends JpaRepository<Password, Long> {
     List<Password> findAllByUserId(long userId);
     Password findByIdAndUserId(long id, long userId);
+    List<Password> findAllByUserIdAndKeyId(Long userId, Long keyId);
     void deleteByUserId(Long userId);
     void deleteByUserIdAndId(Long userId, Long id);
 }

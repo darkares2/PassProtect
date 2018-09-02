@@ -15,6 +15,7 @@ export class Header extends React.Component {
                         <li className="nav-item"><NavLink className="nav-link" to='/'>Events</NavLink></li>
                         <li className="nav-item"><NavLink className="nav-link" to='/keys'>Keys</NavLink></li>
                         <li className="nav-item"><NavLink className="nav-link" to='/passwords'>Passwords</NavLink></li>
+                        <li className="nav-item"><a className="nav-link" href='/logout'>Logout</a></li>
                     </ul>
                 </nav>
             </header>

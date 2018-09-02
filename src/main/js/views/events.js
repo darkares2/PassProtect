@@ -1,3 +1,5 @@
+import {EventList} from "../lists/eventlist";
+
 const React = require('react');
 
 export class Events extends React.Component {
@@ -9,6 +11,7 @@ export class Events extends React.Component {
         return (
             <div>
                 <h1>Welcome to PassProtect!</h1>
+                <EventList/>
             </div>
         )
     }

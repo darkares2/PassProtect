@@ -93,8 +93,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/")
-    public String index(Model model, @RequestHeader("Cookie") String cookies) {
-        model.addAttribute("allCookies", cookies);
+    public String index() {
         return "index";
     }
 
