@@ -1,5 +1,6 @@
 const React = require('react');
 const axios = require('axios');
+import {App} from '../app'
 
 export class Login extends React.Component {
 
@@ -30,29 +31,28 @@ export class Login extends React.Component {
             "username":this.state.username,
             "password":this.state.password
         }
-        axios.post('/login', payload, {
+        /*let bodyFormData = new FormData();
+        bodyFormData.set('username', this.state.username);
+        bodyFormData.set('password', this.state.password);*/
+        axios.post('/loginTest', payload, {
             headers: {
                 'accept': 'application/json',
-            //    'content-type': 'application/x-www-form-urlencoded'
+                //'content-type': 'application/x-www-form-urlencoded'
             }
             })
             .then(function (response) {
                 console.log(response);
-                if(response.data.code === 200){
+                if (response.data.code === 200) {
                     console.log("Login successfull " + response.data);
                     window.location.replace("/");
-                }
-                else if(response.data.code === 403){
-                    console.log("Username password do not match");
-                    alert("username password do not match")
-                }
-                else{
-                    console.log("Username does not exists");
-                    alert("Username does not exist");
-                }
+                } else if (response.data.error !== undefined)
+                    App.showMessage("error", "Login failed", response.data.error);
+                else
+                    console.log("Something went wrong");
             })
             .catch(function (error) {
                 console.log(error);
+                App.showMessage("error", "Login failed", error);
             });
     }
 
